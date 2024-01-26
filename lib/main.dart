@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:notes/screens/create-account.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Notes",
       theme: ThemeData(primaryColor: Colors.black),
-      home: CreateAccount(),
+      home: (FirebaseAuth.instance.currentUser !=null) ? HomePage() : CreateAccount(),
     );
   }
 }

@@ -19,23 +19,18 @@ class _LoginAccountState extends State<LoginAccount> {
     return Scaffold(
       backgroundColor: Themes.mainColor,
       appBar: AppBar(
+        title: Text(
+          "Login",
+        ),
         elevation: 2.0,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => CreateAccount()));
-              },
-              icon: Icon(
-                Icons.create_new_folder,
-                color: Colors.white,
-              ))
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            SizedBox(
+              height: 40,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -47,7 +42,7 @@ class _LoginAccountState extends State<LoginAccount> {
                   hintStyle: Themes.mainContent.copyWith(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -70,7 +65,7 @@ class _LoginAccountState extends State<LoginAccount> {
                   hintStyle: Themes.mainContent.copyWith(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -84,29 +79,42 @@ class _LoginAccountState extends State<LoginAccount> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  if (eemail.text.isNotEmpty &&
-                      epassword.text.isNotEmpty) {
-                    try{
+                  if (eemail.text.isNotEmpty && epassword.text.isNotEmpty) {
+                    try {
                       UserCredential userData = await FirebaseAuth.instance
                           .signInWithEmailAndPassword(
-                          email: eemail.text.trim(), password: epassword.text.trim());
+                              email: eemail.text.trim(),
+                              password: epassword.text.trim());
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             'Login Successfully.',
                             style: TextStyle(color: Colors.white),
                           ),
-                          duration: Duration(
-                              seconds: 2),
+                          duration: Duration(seconds: 2),
                           backgroundColor: Colors.green,
                         ),
                       );
-                      if(userData.user!=null){
+                      if (userData.user != null) {
                         Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
                       }
-                    }on FirebaseAuthException catch (e) {
-                      print("#########Firebase Auth Exception - Code: ${e.code}, Message: ${e.message}");
+                    } on FirebaseAuthException catch (e) {
+                      print(
+                          "#########Firebase Auth Exception - Code: ${e.code}, Message: ${e.message}");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${e.message.toString()}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +130,19 @@ class _LoginAccountState extends State<LoginAccount> {
                     );
                   }
                 },
-                child: Text("Sign Up")),
+                child: Text("Login")),
+            SizedBox(
+              height: 12,
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => CreateAccount()));
+                },
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(color: Colors.white),
+                ))
           ],
         ),
       ),

@@ -19,16 +19,18 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       backgroundColor: Themes.mainColor,
       appBar: AppBar(
+        title: Text(
+          "Create Account",
+        ),
         elevation: 2.0,
         actions: [
-          IconButton(
+          TextButton(
               onPressed: () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => LoginAccount()));
               },
-              icon: Icon(
-                Icons.login,
-                color: Colors.white,
+              child: Text(
+                "Login",style: TextStyle(color: Colors.black),
               ))
         ],
       ),
@@ -36,6 +38,10 @@ class _CreateAccountState extends State<CreateAccount> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+
+            SizedBox(
+              height: 40,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -47,7 +53,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   hintStyle: Themes.mainContent.copyWith(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -70,7 +76,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   hintStyle: Themes.mainContent.copyWith(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -93,7 +99,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   hintStyle: Themes.mainContent.copyWith(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white,width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -110,27 +116,40 @@ class _CreateAccountState extends State<CreateAccount> {
                   if (ename.text.isNotEmpty &&
                       eemail.text.isNotEmpty &&
                       epassword.text.isNotEmpty) {
-                   try{
-                     UserCredential userData = await FirebaseAuth.instance
-                         .createUserWithEmailAndPassword(
-                         email: eemail.text.trim(), password: epassword.text.trim());
-                     ScaffoldMessenger.of(context).showSnackBar(
-                       SnackBar(
-                         content: Text(
-                           'Account Created Successfully.',
-                           style: TextStyle(color: Colors.white),
-                         ),
-                         duration: Duration(
-                             seconds: 2),
-                         backgroundColor: Colors.green,
-                       ),
-                     );
-                     if(userData.user!=null){
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAccount()));
-                     }
-                   }on FirebaseAuthException catch (e){
-                     print("############${e.code.toString()}");
-                   }
+                    try {
+                      UserCredential userData = await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: eemail.text.trim(),
+                              password: epassword.text.trim());
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Account Created Successfully.',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                      if (userData.user != null) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginAccount()));
+                      }
+                    } on FirebaseAuthException catch (e) {
+                      print("############${e.code.toString()}");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${e.message.toString()}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -138,8 +157,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           'Please fill in all fields.',
                           style: TextStyle(color: Colors.white),
                         ),
-                        duration: Duration(
-                            seconds: 2),
+                        duration: Duration(seconds: 2),
                         backgroundColor: Colors.red,
                       ),
                     );
