@@ -17,7 +17,9 @@ Widget notesDisplayWidget(Function()? onTap,QueryDocumentSnapshot doc){
         children: [
           Text(doc['notes_title'],style: Themes.mainTitle,),
           const SizedBox(height: 4.0,),
-          Text(doc['creation_date'],style: Themes.dateTitle,),
+          Text(doc['creation_date'].toString().substring(0,11),style: Themes.dateTitle,),
+          const SizedBox(height: 4.0,),
+          Text(doc['creation_date'].toString().substring(11,19),style: Themes.dateTitle,),
           const SizedBox(height: 8.0,),
           Text(doc['notes_content'],style: Themes.mainContent,overflow: TextOverflow.ellipsis,),
         ],

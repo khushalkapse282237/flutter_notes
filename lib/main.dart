@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:notes/screens/create-account.dart';
 import 'package:notes/screens/home-page.dart';
 import 'firebase_options.dart';
 
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Notes",
-      home: HomePage(),
+      theme: ThemeData(primaryColor: Colors.black),
+      home: CreateAccount(),
     );
   }
 }

@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'edit-notes-screen.dart';
 import 'package:notes/widget/themes.dart';
 
-class ReadNotes extends StatefulWidget {
-  ReadNotes(this.doc, {super.key});
+class EditNotes extends StatefulWidget {
+  EditNotes(this.doc, {super.key});
   QueryDocumentSnapshot doc;
+
   @override
-  State<ReadNotes> createState() => _ReadNotesState();
+  State<EditNotes> createState() => _EditNotesState();
 }
 
-class _ReadNotesState extends State<ReadNotes> {
+class _EditNotesState extends State<EditNotes> {
+  TextEditingController etitle = TextEditingController();
+  TextEditingController econtent = TextEditingController();
   @override
   Widget build(BuildContext context) {
     int color_id = widget.doc['color_id'];
@@ -29,33 +31,6 @@ class _ReadNotesState extends State<ReadNotes> {
         ),
         backgroundColor: Themes.cardColor[color_id],
         elevation: 2.0,
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(FirebaseAuth.instance.currentUser!.email!.toString())
-                    .collection("notes")
-                    .doc(widget.doc.id)
-                    .delete();
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.black,
-              )),
-          IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditNotes(widget.doc)));
-              },
-              icon: Icon(
-                Icons.edit,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -64,9 +39,14 @@ class _ReadNotesState extends State<ReadNotes> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.doc['notes_title'],
-                style: Themes.mainTitle,
+              TextField(
+                controller: etitle,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.doc['notes_title'],
+                  hintStyle: Themes.mainTitle,
+                ),
               ),
               const SizedBox(
                 height: 8.0,
@@ -85,10 +65,35 @@ class _ReadNotesState extends State<ReadNotes> {
               const SizedBox(
                 height: 28.0,
               ),
-              Text(widget.doc['notes_content'], style: Themes.mainContent),
+              TextField(
+                controller: econtent,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.doc['notes_content'],
+                  hintStyle: Themes.mainContent,
+                ),
+              ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser!.email!.toString())
+              .collection("notes")
+              .doc(widget.doc.id.toString())
+              .update({
+            "notes_title": etitle.text,
+            'notes_content': econtent.text,
+          }).then((value) {
+            Navigator.pop(context);
+          }).catchError((e) => print(e));
+        },
+        child: Icon(Icons.save),
       ),
     );
   }
