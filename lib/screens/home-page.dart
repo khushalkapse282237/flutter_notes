@@ -25,7 +25,11 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Themes.mainColor,
         actions: [
           IconButton(
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginAccount()));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -37,9 +41,6 @@ class HomePageState extends State<HomePage> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => LoginAccount()));
               },
               icon: Icon(
                 Icons.logout,

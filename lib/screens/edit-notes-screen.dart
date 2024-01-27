@@ -14,6 +14,11 @@ class EditNotes extends StatefulWidget {
 class _EditNotesState extends State<EditNotes> {
   TextEditingController etitle = TextEditingController();
   TextEditingController econtent = TextEditingController();
+  void initState(){
+    super.initState();
+    etitle.text = "${widget.doc['notes_title']}";
+    econtent.text = "${widget.doc['notes_content']}";
+  }
   @override
   Widget build(BuildContext context) {
     int color_id = widget.doc['color_id'];
@@ -71,7 +76,7 @@ class _EditNotesState extends State<EditNotes> {
                 maxLines: null,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: widget.doc['notes_content'],
+                  hintText: widget.doc['notes_content']==""? "Notes Content":widget.doc['notes_content'],
                   hintStyle: Themes.mainContent,
                 ),
               ),

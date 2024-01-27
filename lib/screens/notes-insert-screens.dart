@@ -80,14 +80,28 @@ class _NotesInsertScreenState extends State<NotesInsertScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.email!.toString()).collection("notes").add({
-            "notes_title": notesTitle.text,
-            "creation_date": date,
-            "notes_content": notesContent.text,
-            "color_id": color_id,
-          }).then((value) {
-            Navigator.pop(context);
-          }).catchError((error) => print("failed to insert data"));
+          if(notesTitle.text.isEmpty){
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Please fill in Notes Title',
+                  style: TextStyle(color: Colors.white),
+                ),
+                duration: Duration(
+                    seconds: 2),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }else{
+            FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.email!.toString()).collection("notes").add({
+              "notes_title": notesTitle.text,
+              "creation_date": date,
+              "notes_content": notesContent.text,
+              "color_id": color_id,
+            }).then((value) {
+              Navigator.pop(context);
+            }).catchError((error) => print("failed to insert data"));
+          }
         },
         backgroundColor: Themes.accentColor,
         child: const Icon(Icons.save),

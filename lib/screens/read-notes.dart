@@ -39,6 +39,17 @@ class _ReadNotesState extends State<ReadNotes> {
                     .doc(widget.doc.id)
                     .delete();
                 Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Deleted Successfully',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    duration: Duration(
+                        seconds: 2),
+                    backgroundColor: Colors.green,
+                  ),
+                );
               },
               icon: const Icon(
                 Icons.delete,
